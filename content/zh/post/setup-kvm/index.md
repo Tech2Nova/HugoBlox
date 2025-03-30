@@ -1,12 +1,16 @@
 ---
-title: "Setup Kvm enviroment"
+title: "Setup kvm enviroment"
 date: 2025-03-30T20:47:21+08:00
 summary: 在ubuntu主机中搭建KVM环境，并安装qemu guest agent
 date: 2024-12-04
 authors:
   - admin
 tag:
- -技术解决
+ - 技术解决
+
+
+image:
+  filename: "feature.png"
 ---
 
 

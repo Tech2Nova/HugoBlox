@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Recent &amp; Upcoming Talks | 党晨曦的个人主页</title>
+    <title>Moments | 党晨曦的个人主页</title>
     <link>http://localhost:1313/event/</link>
       <atom:link href="http://localhost:1313/event/index.xml" rel="self" type="application/rss+xml" />
-    <description>Recent &amp; Upcoming Talks</description>
+    <description>Moments</description>
     <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>zh-Hans</language><lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
     <image>
       <url>http://localhost:1313/media/icon_hu_a16b313f10021a87.png</url>
-      <title>Recent &amp; Upcoming Talks</title>
+      <title>Moments</title>
       <link>http://localhost:1313/event/</link>
     </image>
     
@@ -30,6 +30,21 @@
 &lt;li&gt;&lt;strong&gt;Embed&lt;/strong&gt; your slides (e.g. Google Slides) or presentation video on this page using &lt;a href=&#34;https://docs.hugoblox.com/reference/markdown/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;shortcodes&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Further event details, including &lt;a href=&#34;https://docs.hugoblox.com/reference/markdown/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;page elements&lt;/a&gt; such as image galleries, can be added to the body of this page.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>参加讲座</title>
+      <link>http://localhost:1313/event/attend-lecture/</link>
+      <pubDate>Mon, 24 Mar 2025 09:30:10 +0800</pubDate>
+      <guid>http://localhost:1313/event/attend-lecture/</guid>
+      <description>&lt;h4 id=&#34;报告主题&#34;&gt;报告主题&lt;/h4&gt;
+&lt;p&gt;党的二十大报告强调“一国两制”是香港保持长期繁荣稳定的最佳制度安排，必须长期坚持。作为香港特别行政区第五任行政长官，林郑月娥任内经历了香港自回归以来最险峻的挑战。在党中央的指导和支持下，依照《宪法》和《基本法》办事，香港局势实现由乱到治的重大转折，将踏上由治及兴的新征程。林郑月娥的专题报告，会从历史回顾，实践经验和个人体会说明全面准确贯彻“一国两制”才能保持香港长期繁荣稳定。她也会分享对香港未来的信心和如何发挥香港“背靠祖国，面向世界”的优势，更好融入国家发展大局&lt;/p&gt;
+&lt;img src=&#34;./image/1.jpg&#34;&gt;
+&lt;img src=&#34;./image/2.jpg&#34;&gt;
+&lt;img src=&#34;./image/3.jpg&#34;&gt;
+&lt;h4 id=&#34;现场感受&#34;&gt;现场感受&lt;/h4&gt;
+&lt;p&gt;林郑月娥被邀请到海大做演讲，一票一座，现场人非常多，林郑月娥详细的讲解了一国两制的具体内容，以及在香港的实施情况，值得注意的是在她执政期间，正是乱港分子最猖狂的时期，2019年爆发港独示威游行等及其恶劣的行为，林郑月娥从香港最高领导人的视角向观众讲述了当时的事件，包括前因后果以及后来的宣布实施国安法等，让观众对当时的情况有了更详细的了解。&lt;/p&gt;
 </description>
     </item>
     

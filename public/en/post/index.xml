@@ -13,14 +13,6 @@
     </image>
     
     <item>
-      <title>Setup Kvm</title>
-      <link>http://localhost:1313/en/post/setup-kvm/</link>
-      <pubDate>Sun, 30 Mar 2025 20:22:43 +0800</pubDate>
-      <guid>http://localhost:1313/en/post/setup-kvm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>🎉 Easily create your own simple yet highly customizable blog</title>
       <link>http://localhost:1313/en/post/get-started/</link>
       <pubDate>Fri, 27 Oct 2023 00:00:00 +0000</pubDate>
@@ -233,7 +225,7 @@
 
 
 
-&lt;div id=&#34;chart-182634957&#34; class=&#34;chart&#34;&gt;&lt;/div&gt;
+&lt;div id=&#34;chart-547698312&#34; class=&#34;chart&#34;&gt;&lt;/div&gt;
 &lt;script&gt;
   async function fetchChartJSON() {
     console.debug(&#39;Hugo Blox fetching chart JSON...&#39;)
@@ -251,7 +243,7 @@
 
       fetchChartJSON().then(chart =&gt; {
         console.debug(&#39;Plotting chart...&#39;)
-        window.Plotly.newPlot(&#39;chart-182634957&#39;, chart.data, chart.layout, {responsive: true});
+        window.Plotly.newPlot(&#39;chart-547698312&#39;, chart.data, chart.layout, {responsive: true});
       });
     }, 500 );
   })();

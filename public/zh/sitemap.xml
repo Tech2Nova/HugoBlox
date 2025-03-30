@@ -30,6 +30,10 @@
                 href="http://localhost:1313/event/"
                 />
   </url><url>
+    <loc>http://localhost:1313/event/attend-lecture/</loc>
+    <lastmod>2025-03-30T22:03:10+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
     <loc>http://localhost:1313/post/</loc>
     <lastmod>2024-12-04T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -47,16 +51,6 @@
     <loc>http://localhost:1313/post/setup-kvm/</loc>
     <lastmod>2024-12-04T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-us"
-                href="http://localhost:1313/en/post/setup-kvm/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-Hans"
-                href="http://localhost:1313/post/setup-kvm/"
-                />
   </url><url>
     <loc>http://localhost:1313/projects/</loc>
     <lastmod>2024-05-19T00:00:00+00:00</lastmod>

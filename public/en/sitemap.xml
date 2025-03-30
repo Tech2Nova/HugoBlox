@@ -44,20 +44,6 @@
                 href="http://localhost:1313/en/post/"
                 />
   </url><url>
-    <loc>http://localhost:1313/en/post/setup-kvm/</loc>
-    <lastmod>2025-03-30T20:22:43+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-Hans"
-                href="http://localhost:1313/post/setup-kvm/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-us"
-                href="http://localhost:1313/en/post/setup-kvm/"
-                />
-  </url><url>
     <loc>http://localhost:1313/en/projects/</loc>
     <lastmod>2024-05-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>

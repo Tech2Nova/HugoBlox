@@ -68,12 +68,13 @@ sections:
     id: talks
     content:
       title: 动态
+      count: 4
       filters:
         folders:
           - event
     design:
       view: article-grid
-      columns: 1
+      columns: 2
   - block: collection
     id: news
     content:
@@ -83,7 +84,7 @@ sections:
       # Page type to display. E.g. post, talk, publication...
       page_type: post
       # Choose how many pages you would like to display (0 = all pages)
-      count: 5
+      count: 4
       # Filter on criteria
       filters:
         author: ""
