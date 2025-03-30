@@ -16,7 +16,7 @@ sections:
       text: ""
       # Show a call-to-action button under your biography? (optional)
       button:
-        text: Download CV
+        text: 下载简历
         url: uploads/resume.pdf
     design:
       css_class: dark
@@ -45,28 +45,29 @@ sections:
   - block: collection
     id: papers
     content:
-      title: Featured Publications
+      title: 文章
+      count: 1
       filters:
         folders:
           - publication
         featured_only: true
     design:
       view: article-grid
-      columns: 2
-  - block: collection
-    content:
-      title: Recent Publications
-      text: ""
-      filters:
-        folders:
-          - publication
-        exclude_featured: false
-    design:
-      view: citation
+      columns: 1
+  # - block: collection
+  #   content:
+  #     title: Recent Publications
+  #     text: ""
+  #     filters:
+  #       folders:
+  #         - publication
+  #       exclude_featured: false
+  #   design:
+  #     view: citation
   - block: collection
     id: talks
     content:
-      title: Recent & Upcoming Talks
+      title: 动态
       filters:
         folders:
           - event
@@ -76,7 +77,7 @@ sections:
   - block: collection
     id: news
     content:
-      title: Recent News
+      title: 博客
       subtitle: ''
       text: ''
       # Page type to display. E.g. post, talk, publication...
