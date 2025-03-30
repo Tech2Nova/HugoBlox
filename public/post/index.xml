@@ -1,16 +1,296 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog | Hugo Academic CV Theme</title>
+    <title>Blog | 党晨曦的个人主页</title>
     <link>http://localhost:1313/post/</link>
       <atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Blog</description>
-    <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>en-us</language><lastBuildDate>Fri, 27 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>zh-Hans</language><lastBuildDate>Wed, 04 Dec 2024 00:00:00 +0000</lastBuildDate>
     <image>
       <url>http://localhost:1313/media/icon_hu_a16b313f10021a87.png</url>
       <title>Blog</title>
       <link>http://localhost:1313/post/</link>
     </image>
+    
+    <item>
+      <title>Setup Kvm enviroment</title>
+      <link>http://localhost:1313/post/setup-kvm/</link>
+      <pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/post/setup-kvm/</guid>
+      <description>&lt;h3 id=&#34;搭建kvm环境安装qemu-guest-agent&#34;&gt;搭建KVM环境、安装qemu guest agent&lt;/h3&gt;
+&lt;h4 id=&#34;1配置环境说明&#34;&gt;1、配置环境说明&lt;/h4&gt;
+&lt;p&gt;物理主机：Windows11，Intel Core i7-13650HX，VMware Workstation 16 Pro&lt;/p&gt;
+&lt;p&gt;VMware客户机：Ubuntu16.04&lt;/p&gt;
+&lt;p&gt;KVM客户机：Windows7 ultimate&lt;/p&gt;
+&lt;p&gt;注：物理主机要使用Intel处理器，AMD会出现不兼容的问题；KVM客户机可使用Win7，也可以使用Win7旗舰版，提前准备好iso镜像文件&lt;/p&gt;
+&lt;h4 id=&#34;2安装kvm&#34;&gt;2、安装KVM&lt;/h4&gt;
+&lt;h5 id=&#34;21-虚拟化技术&#34;&gt;2.1 虚拟化技术&lt;/h5&gt;
+&lt;p&gt;我们通常所说的虚拟化主要是指平台虚拟化技术，通过使⽤控制程序（Control Program，也被称为  Virtual Machine Monitor 或Hypervisor），隐藏特定计算平台的实际物理特性，为⽤户提供抽象的、统 ⼀的、模拟的计算环境（称为虚拟机）。虚拟机中运⾏的操作系统被称为客户机操作系统（Guest  OS），运⾏虚拟机监控器的操作系统被称为主机操作系统（Host OS），当然某些虚拟机监控器可以脱 离操作系统直接运⾏在硬件之上（如 VMWARE 的 ESX 产品）。&lt;/p&gt;
+&lt;h5 id=&#34;21-kvm介绍&#34;&gt;2.1 KVM介绍&lt;/h5&gt;
+&lt;p&gt;KVM 全称是基于内核的虚拟机（Kernel-based Virtual Machine），它是一个 Linux 的一个内核模块，该内核模块使得 Linux 变成了一个 Hypervisor：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;它由 Quramnet 开发，该公司于 2008年被 Red Hat 收购。&lt;/li&gt;
+&lt;li&gt;它支持 x86 (32 and 64 位), s390, Powerpc 等 CPU。&lt;/li&gt;
+&lt;li&gt;它从 Linux 2.6.20 起就作为一模块被包含在 Linux 内核中。&lt;/li&gt;
+&lt;li&gt;它需要支持虚拟化扩展的 CPU（即支持Intel VT 或者 AMD-V）。&lt;/li&gt;
+&lt;li&gt;它是完全开源的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;KVM 中，虚拟机被实现为常规的 Linux 进程，由标准 Linux 调度程序进行调度&lt;/strong&gt;；虚机的每个虚拟 CPU 被实现为一个常规的 Linux 进程。这使得 KMV 能够使用 Linux 内核的已有功能。但是，KVM 本身不执行任何硬件模拟，需要客户空间程序通过 /dev/kvm 接口设置一个客户机虚拟服务器的地址空间，向它提供模拟的 I/O，并将它的视频显示映射回宿主的显示屏。目前这个应用程序是 QEMU。&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/e72bc85c92ec414f91b0fef25061d2f5.jpeg&#34; alt=&#34;img&#34; style=&#34;zoom:50%;&#34; /&gt;&lt;/center&gt;
+&lt;ul&gt;
+&lt;li&gt;KVM：运行在内核空间，提供CPU 和内存的虚级化，以及客户机的 I/O 拦截。Guest 的 I/O 被 KVM 拦截后，交给 QEMU 处理。&lt;/li&gt;
+&lt;li&gt;QEMU：修改过的为 KVM 虚机使用的 QEMU 代码，运行在用户空间，提供硬件 I/O 虚拟化，通过 IOCTL /dev/kvm 设备和 KVM 交互。&lt;/li&gt;
+&lt;li&gt;libvirt：是调用kvm虚拟化技术的接口用于管理的&lt;/li&gt;
+&lt;li&gt;虚拟机配置文件，XML文件，位置 ：/etc/libvirt/qemu/&lt;/li&gt;
+&lt;li&gt;虚拟机硬盘文件，默认位置：/var/lib/libvirt/images/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5 id=&#34;22-vmware设置&#34;&gt;2.2 VMware设置&lt;/h5&gt;
+&lt;p&gt;（1）按照自身电脑配置设置Ubuntu的硬件参数，内存至少在4GB以上，硬盘越大越好，至少在60GB以上&lt;/p&gt;
+&lt;p&gt;（2）-&amp;gt;编辑虚拟机设置-&amp;gt;处理器-&amp;gt;虚拟化引擎，这里要勾选虚拟化Intel VT-x/EPT或AMD-V/RVI(V)&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-10_10-06-49.png&#34; alt=&#34;img&#34; style=&#34;zoom:33%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;但是勾选这个可能会出现虚拟机无法开机的问题&lt;/p&gt;
+&lt;p&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure  &gt;
+  &lt;div class=&#34;flex justify-center	&#34;&gt;
+    &lt;div class=&#34;w-100&#34; &gt;&lt;img src=&#34;https://www.liedou.cc/img/builtin/solve-unsupported-intel-vt-x/unsupport-intel-vt-x.webp&#34; alt=&#34;img&#34; loading=&#34;lazy&#34; data-zoomable /&gt;&lt;/div&gt;
+  &lt;/div&gt;&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;这是因为微软的 Hyper-V 与 VMware Workstation 之间是冲突的，所以你不能二者兼得。因此，如果你要在 VMware 中使用英特尔虚拟化技术，就必须要舍弃 Hyper-V。&lt;/p&gt;
+&lt;p&gt;如果电脑是win11专业版，可以在网上搜索编辑组策略的方法解决、并在Windows功能界面，将Hyper-V相关的选项全部取消勾选&lt;/p&gt;
+&lt;p&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure  &gt;
+  &lt;div class=&#34;flex justify-center	&#34;&gt;
+    &lt;div class=&#34;w-100&#34; &gt;&lt;img src=&#34;./KVM/d2d8746b6b798841a80efbc2fbb77636.png&#34; alt=&#34;img&#34; loading=&#34;lazy&#34; data-zoomable /&gt;&lt;/div&gt;
+  &lt;/div&gt;&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;如果电脑是win11家庭版，需要以管理员身份打开shellcode，运行以下代码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;bcdedit /set hypervisorlaunchtype off
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;并关闭所有Hyper-V相关的服务&lt;/p&gt;
+&lt;img src=&#34;.\kvm\image-20241210105536041.png&#34; alt=&#34;image-20241210105536041&#34; style=&#34;zoom: 50%;&#34; /&gt;
+&lt;p&gt;如果以上措施还是无法解决问题，可以参考以下博客尝试解决&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.51cto.com/xiaobinbin/5286998&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://blog.51cto.com/xiaobinbin/5286998&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/never-say-die/p/16840030.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://www.cnblogs.com/never-say-die/p/16840030.html&lt;/a&gt;&lt;/p&gt;
+&lt;h5 id=&#34;23-安装kvm&#34;&gt;2.3 安装KVM&lt;/h5&gt;
+&lt;p&gt;（1）首先看看cpu是否支持kvm虚拟化：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;egrep -c &lt;span class=&#34;s2&#34;&gt;&amp;#34;(svm|vmx)&amp;#34;&lt;/span&gt; /proc/cpuinfo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure  &gt;
+  &lt;div class=&#34;flex justify-center	&#34;&gt;
+    &lt;div class=&#34;w-100&#34; &gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_11-42-27.png&#34; alt=&#34;img&#34; loading=&#34;lazy&#34; data-zoomable /&gt;&lt;/div&gt;
+  &lt;/div&gt;&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;返回结果大于0即可&lt;/p&gt;
+&lt;p&gt;（2）安装KVM及相关依赖包&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt-get install qemu-kvm qemu virt-manager virt-viewer libvirt-bin bridge-utils
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（3） 启用桥接网络&lt;/p&gt;
+&lt;p&gt;先备份一套原有配置&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo cp /etc/network/interfaces /etc/network/interfaces-bak
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;对/etc/network/interfaces 配置文件进行更改&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo gedit /etc/network/interfaces
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;将以下内容粘贴复制到文件中：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-txt&#34; data-lang=&#34;txt&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# Enabing Bridge networking br0 interface
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;auto br0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iface br0 inet static
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;address 192.168.1.130
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;network 192.168.1.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;netmask 255.255.255.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;broadcast 192.168.1.255
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#gateway 192.168.1.1   设置网关后， 191.168.1.1 权重是0 在第一位，系统重启后可能无法联网，所以我删掉了这个网关
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;dns-nameservers 223.5.5.5
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;bridge_ports eth0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;bridge_stp off
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（4）重启虚拟机  reboot，然后使用ifconfig查看网络配置&lt;/p&gt;
+&lt;p&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure  &gt;
+  &lt;div class=&#34;flex justify-center	&#34;&gt;
+    &lt;div class=&#34;w-100&#34; &gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-13-12.png&#34; alt=&#34;img&#34; loading=&#34;lazy&#34; data-zoomable /&gt;&lt;/div&gt;
+  &lt;/div&gt;&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;（5） 启动KVM虚拟系统管理器：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo virt-manager
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure  &gt;
+  &lt;div class=&#34;flex justify-center	&#34;&gt;
+    &lt;div class=&#34;w-100&#34; &gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-13-58.png&#34; alt=&#34;img&#34; loading=&#34;lazy&#34; data-zoomable /&gt;&lt;/div&gt;
+  &lt;/div&gt;&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h4 id=&#34;3安装qemu-guest-agent&#34;&gt;3、安装qemu guest agent&lt;/h4&gt;
+&lt;h5 id=&#34;31-virtio驱动&#34;&gt;3.1 Virtio驱动&lt;/h5&gt;
+&lt;p&gt;Virtio驱动程序是KVM虚拟机的半虚拟化设备驱动程序，半虚拟化驱动程序可提高机器性能，减少I / O延迟并将吞吐量提高到接近裸机水平，对于完全虚拟化的计算机，建议使用半虚拟化驱动程序。&lt;/p&gt;
+&lt;p&gt;这是虚拟机内部代理的基础。&lt;/p&gt;
+&lt;p&gt;virtio-win-0.1.171： &lt;a href=&#34;https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.171-1/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.171-1/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;提前下载好放在ubuntu中&lt;/p&gt;
+&lt;h5 id=&#34;32-安装win7客户机&#34;&gt;3.2 安装win7客户机&lt;/h5&gt;
+&lt;p&gt;（1）点击文件-&amp;gt;新建虚拟机 （类似VMware）&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-14-35.png&#34; width=&#34;250&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-20-24.png&#34; width=&#34;250&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-23-18.png&#34; width=&#34;250&#34;/&gt;&lt;/center&gt;
+&lt;p&gt;（2）第四步，选择第二个，并点击Manage&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-23-32.png&#34; alt=&#34;img&#34; style=&#34;zoom:80%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;（3）新建一个存储池（不创建也可以，这样会安装到默认的位置（ /var/lib/libvirt/images））&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-25-52.png&#34; width=&#34;350&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./kvm/dizhi.png&#34; width=&#34;300&#34;/&gt;&lt;/center&gt;
+&lt;p&gt;目标路径设置为/root/KVM&lt;/p&gt;
+&lt;p&gt;（4）创建虚拟磁盘（磁盘会在存储池的指定目录下），我将名称命名为windows7a&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-27-57.png&#34; alt=&#34;img&#34; style=&#34;zoom:67%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;（4）点击完成，回到第5步，将虚拟机名称命名为windows7&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_18-29-31.png&#34; alt=&#34;img&#34; style=&#34;zoom:67%;&#34; /&gt;&lt;/center&gt;
+&lt;h5 id=&#34;33-win7客户机配置&#34;&gt;3.3 win7客户机配置&lt;/h5&gt;
+&lt;p&gt;（1）上一步点击完成后，不要直接安装，要先进行虚拟机配置，安装后再配置可能会出现问题，按照下图依次进行配置，每配置一项，点一次应用&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi1.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi2.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi3.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi4.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;p&gt;（2）添加Virtio-win镜像文件&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi6.png&#34; alt=&#34;img&#34; style=&#34;zoom:50%;&#34; /&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi7.png&#34; alt=&#34;img&#34; style=&#34;zoom:50%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;（3）安装驱动，两个驱动都要安装，重复两遍即可&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi8.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi9.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi10.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi11.png&#34; width=&#34;380&#34;/&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi12.png&#34; alt=&#34;img&#34; style=&#34;zoom: 67%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;（4）慢慢等Windows安装完毕，开机后准备进行驱动激活程序。注意：安装完毕后，虚拟机不能关闭（因为虚拟机关闭后，配置文件的编辑可能会失败，会出现下次无法开启虚拟机，例如虚拟机开启时报错）。&lt;/p&gt;
+&lt;p&gt;在虚拟机开机的情况下打开虚拟机配置文件，用gedit打开，文件位置是/etc/libvirt/qemu&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo gedit /etc/libvirt/qemu/windows7.xml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;center&gt;&lt;img src=&#34;./KVM/peizhi13.png&#34; alt=&#34;img&#34; style=&#34;zoom:50%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;然后将下列代码插入到&lt;device&gt;列表的最后一行，保存后关闭&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;lt;channel &lt;span class=&#34;nv&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;unix&amp;#39;&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   &amp;lt;&lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;bind&amp;#39;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   &amp;lt;target &lt;span class=&#34;nv&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;virtio&amp;#39;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;org.qemu.guest_agent.0&amp;#39;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   &amp;lt;address &lt;span class=&#34;nv&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;virtio-serial&amp;#39;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;controller&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;bus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2&amp;#39;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &amp;lt;/channel&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;center&gt;&lt;img src=&#34;./KVM/peizhi14.png&#34; alt=&#34;img&#34; style=&#34;zoom:60%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;（5）下面进入虚拟机内部操作，如果虚拟机没有网络请不要着急，按照下图所示，一步一步操作即可&lt;/p&gt;
+&lt;p&gt;首先打开设备管理器，看到如下图所示，有两个PCI和一个网络驱动没有安装，安装步骤如图所示&lt;/p&gt;
+&lt;center class=&#34;half&#34;&gt;
+    &lt;img src=&#34;./KVM/peizhi15.png&#34; width=&#34;380&#34;/&gt;
+    &lt;img src=&#34;./KVM/peizhi16.png&#34; width=&#34;380&#34;/&gt;
+&lt;/center&gt;
+&lt;center class=&#34;half&#34;&gt;
+    &lt;img src=&#34;./KVM/peizhi17.png&#34; width=&#34;380&#34;/&gt;
+    &lt;img src=&#34;./KVM/peizhi18.png&#34; width=&#34;380&#34;/&gt;
+&lt;/center&gt;
+&lt;p&gt;其他两个步骤相同，只是改变文件夹，分别在Balloon文件夹安装PCI设备驱动，以及在Netkvm文件夹中安装网络设备驱动&lt;/p&gt;
+&lt;center class=&#34;half&#34;&gt;
+    &lt;img src=&#34;./KVM/peizhi19.png&#34; width=&#34;380&#34;/&gt;
+    &lt;img src=&#34;./KVM/peizhi20.png&#34; width=&#34;380&#34;/&gt;
+&lt;/center&gt;
+&lt;p&gt;安装完毕后可以看到下图所示&lt;/p&gt;
+&lt;center class=&#34;half&#34;&gt;
+    &lt;img src=&#34;./KVM/peizhi21.png&#34; width=&#34;380&#34;/&gt;
+    &lt;img src=&#34;./KVM/peizhi22.png&#34; width=&#34;380&#34;/&gt;
+&lt;/center&gt;
+&lt;p&gt;（6）最后，安装qemu，如下图所示，在virtio-win磁盘下，找到guest-agent文件下的qemu-ga-64文件安装。安装完毕后，整个安装过程就完毕了，后续就是验证是否安装成功。&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/peizhi23.png&#34; alt=&#34;img&#34; style=&#34;zoom: 50%;&#34; /&gt;&lt;/center&gt;
+&lt;h5 id=&#34;34-验证步骤&#34;&gt;3.4 验证步骤&lt;/h5&gt;
+&lt;p&gt;（1）通过命令行查看客户机、关闭客户机&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#以下代码需要将代码的windows7改为自己设置的名称&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#查看客户机&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo virsh list --all
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#关闭客户机&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo virsh shutdown windows7
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_20-50-09.png&#34; alt=&#34;img&#34; style=&#34;zoom: 50%;&#34; /&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_20-50-35.png&#34; alt=&#34;img&#34; style=&#34;zoom:50%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;（2）进行开机，然后等虚拟机启动后，&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#开机&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;virsh start windows7
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#终端检测&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;virsh qemu-agent-command windows7 &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;execute&amp;#34;:&amp;#34;guest-ping&amp;#34;}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果返回如下图所示，则安装成功。&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./KVM/Snipaste_2024-12-09_20-57-58.png&#34; alt=&#34;img&#34; style=&#34;zoom:50%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;注意，如果这个命令如果报错，先不要怀疑自己安装出问题，这可能是正常现象，许多人都遇到过这个问题，请重启一下你的物理主机（ubuntu），物理主机重启后应该就没问题了，如果重启后还报错，请仔细检测全程安装步骤&lt;/p&gt;
+&lt;h5 id=&#34;35-程序在桌面的窗口可视化&#34;&gt;3.5 程序在桌面的窗口可视化&lt;/h5&gt;
+&lt;p&gt;当程序成功在任务管理器的进程列表时，很有可能是看不到程序窗口的，到时候可能会怀疑程序到底是不是正常按照自己的指令运行了，如下图所示（程序注入成功，但是看不到记事本窗口）：&lt;/p&gt;
+&lt;p&gt;这种情况下，只需要在设备管理器的“服务”选项找到qemu-guest-agent选项，按照下图所示操作即可&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;./kvm/peizhi24.png&#34; alt=&#34;img&#34; style=&#34;zoom: 67%;&#34; /&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;./kvm/peizhi25.png&#34; alt=&#34;img&#34; style=&#34;zoom:67%;&#34; /&gt;&lt;/center&gt;
+&lt;p&gt;然后再次运行如下图命令，就可以看到窗口了&lt;/p&gt;
+&lt;h4 id=&#34;4hpc数据的采集&#34;&gt;4、HPC数据的采集&lt;/h4&gt;
+&lt;h5 id=&#34;41-恶意软件数据集获取&#34;&gt;4.1 恶意软件数据集获取&lt;/h5&gt;
+&lt;p&gt;从virusshare上下载了一个针对windows平台上的恶意软件数据集，VirusShare_x86-64_WinEXE_20130711.zip&lt;/p&gt;
+&lt;p&gt;未完..（下周会继续补充）&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>🎉 Easily create your own simple yet highly customizable blog</title>
@@ -22,7 +302,7 @@
 
 
 &lt;details class=&#34;print:hidden xl:hidden&#34; open&gt;
-  &lt;summary&gt;Table of Contents&lt;/summary&gt;
+  &lt;summary&gt;目录&lt;/summary&gt;
   &lt;div class=&#34;text-sm&#34;&gt;
   &lt;nav id=&#34;TableOfContents&#34;&gt;
   &lt;ul&gt;
@@ -225,7 +505,7 @@
 
 
 
-&lt;div id=&#34;chart-691348527&#34; class=&#34;chart&#34;&gt;&lt;/div&gt;
+&lt;div id=&#34;chart-581476392&#34; class=&#34;chart&#34;&gt;&lt;/div&gt;
 &lt;script&gt;
   async function fetchChartJSON() {
     console.debug(&#39;Hugo Blox fetching chart JSON...&#39;)
@@ -243,7 +523,7 @@
 
       fetchChartJSON().then(chart =&gt; {
         console.debug(&#39;Plotting chart...&#39;)
-        window.Plotly.newPlot(&#39;chart-691348527&#39;, chart.data, chart.layout, {responsive: true});
+        window.Plotly.newPlot(&#39;chart-581476392&#39;, chart.data, chart.layout, {responsive: true});
       });
     }, 500 );
   })();

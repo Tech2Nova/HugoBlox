@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Wowchemy | Hugo Academic CV Theme</title>
+    <title>Wowchemy | 党晨曦的个人主页</title>
     <link>http://localhost:1313/tags/wowchemy/</link>
       <atom:link href="http://localhost:1313/tags/wowchemy/index.xml" rel="self" type="application/rss+xml" />
     <description>Wowchemy</description>
-    <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>en-us</language><lastBuildDate>Thu, 26 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>zh-Hans</language><lastBuildDate>Thu, 26 Oct 2023 00:00:00 +0000</lastBuildDate>
     <image>
       <url>http://localhost:1313/media/icon_hu_a16b313f10021a87.png</url>
       <title>Wowchemy</title>

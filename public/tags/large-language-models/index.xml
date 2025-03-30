@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Large Language Models | Hugo Academic CV Theme</title>
+    <title>Large Language Models | 党晨曦的个人主页</title>
     <link>http://localhost:1313/tags/large-language-models/</link>
       <atom:link href="http://localhost:1313/tags/large-language-models/index.xml" rel="self" type="application/rss+xml" />
     <description>Large Language Models</description>
-    <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>en-us</language><lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>zh-Hans</language><lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>http://localhost:1313/media/icon_hu_a16b313f10021a87.png</url>
       <title>Large Language Models</title>
