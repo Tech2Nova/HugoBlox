@@ -75,7 +75,7 @@ KVM 全称是基于内核的虚拟机（Kernel-based Virtual Machine），它是
 
 但是勾选这个可能会出现虚拟机无法开机的问题
 
-![img](https://www.liedou.cc/img/builtin/solve-unsupported-intel-vt-x/unsupport-intel-vt-x.webp)
+![img](./KVM/unsupport-intel-vt-x.webp)
 
 这是因为微软的 Hyper-V 与 VMware Workstation 之间是冲突的，所以你不能二者兼得。因此，如果你要在 VMware 中使用英特尔虚拟化技术，就必须要舍弃 Hyper-V。
 
